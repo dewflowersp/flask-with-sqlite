@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 import sqlite3 as sql
 
 app = Flask(__name__)
@@ -26,14 +26,13 @@ def addrec():
             cur = con.cursor()
             cur.execute("INSERT INTO students (name,addr,city,pin) VALUES (?,?,?,?)",(name,addr,city,pin) )
             con.commit()
-            msg = "Record successfully added!"
+            flash("Record successfully added!")
       except:
          con.rollback()
-         msg = "error in insert operation"
-      
+         flash("error in insert operation")
       finally:
-         return render_template("list.html",msg = msg)
          con.close()
+         return redirect(url_for('list'))
 
 @app.route('/list')
 def list():
